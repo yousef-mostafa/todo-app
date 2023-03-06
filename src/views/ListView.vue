@@ -6,18 +6,18 @@
       @assignFlag="flagValue"
       :style="this.togglePopUp"
     ></popUp>
-    <v-date-picker
+    <!-- <v-date-picker
       @dayclick="onDayClick"
       v-model="day"
       :id="wantedID"
       style="position: absolute; z-index: 1000"
-      :style="(toggleCalender, calenderPos)"
-    ></v-date-picker>
+      :style="calenderPos + toggleCalender"
+    ></v-date-picker> -->
     <header>
       <div class="container">
         <div class="row">
           <div class="col-5"><p class="mx-5">Title</p></div>
-          <div class="col-3 col-md-2 text-center"><p>Date</p></div>
+          <div class="col-3 col-md-2 text-center"><p>Ending Date</p></div>
           <div class="col-4 text-center"><p>Status</p></div>
           <div class="col-1 d-none d-md-block text-center">
             <p @click="addTask()">+</p>
@@ -63,13 +63,20 @@
                 <span
                   class="date__text"
                   v-text="task.date"
-                  @click="
-                    setCalenderPos($event);
-                    toggleCalender = 'display:block';
-                  "
-                  @blur="toggleCalender = 'display:none'"
+                  @click="v - date - picker"
                 >
                 </span>
+                <v-date-picker
+                  @dayclick="onDayClick"
+                  v-model="day"
+                  :id="wantedID"
+                  style="
+                    position: absolute;
+                    z-index: 1000;
+                    inset: 0;
+                    display: none;
+                  "
+                ></v-date-picker>
               </div>
             </div>
             <div class="col-4">
@@ -96,7 +103,7 @@
                       `Do you want to delete this task?!
                       title : ${task.title}`
                     );
-                    setTogglePopUp();
+                    togglePopUp = toggleProb(togglePopUp);
                     setWantedID(task.id);
                   "
                 ></i>
@@ -125,6 +132,7 @@ export default {
       togglePopUp: "display:none",
       toggleCalender: "display: none",
       calenderPos: "",
+      currentDateBox: false,
       day: new Date(),
     };
   },
@@ -203,21 +211,31 @@ export default {
       if (flag) {
         this.deleteTask(id);
       }
-      this.setTogglePopUp();
+      this.togglePopUp = this.toggleProb(this.togglePopUp);
     },
-    setTogglePopUp: function () {
-      if (this.togglePopUp == "display:block") {
-        document.body.style.overflow = "auto";
-        this.togglePopUp = "display:none";
+    toggleProb: function (prop) {
+      return prop == "display:block" ? "display:none" : "display:block";
+    },
+    handleCalender: function (e) {
+      // if this date box the same hide calender if else change calender position
+      if (this.currentDateBox) {
+        if (this.currentDateBox == e.target) {
+          this.toggleCalender = this.toggleProb(this.toggleCalender);
+        } else {
+          this.setCalenderPos(e);
+          this.currentDateBox = e.target;
+        }
       } else {
-        document.body.style.overflow = "hidden";
-        this.togglePopUp = "display:block";
+        this.setCalenderPos(e);
+        this.toggleCalender = this.toggleProb(this.toggleCalender);
+        this.currentDateBox = e.target;
       }
     },
     setCalenderPos: function (e) {
+      let target = e.target;
       this.calenderPos = `
-      top:${e.target.offsetTop + e.target.offsetHeight}px;
-      left:${e.target.offsetLeft - e.target.offsetWidth}px;`;
+      top:${target.offsetTop + target.offsetHeight}px;
+      left:${12 + target.offsetLeft - target.parentElement.offsetWidth / 2}px;`;
       console.log(e);
     },
   },
@@ -306,6 +324,8 @@ header {
         padding: 4px 8px;
         font-weight: 600;
         border-radius: 6px;
+        display: inline-block;
+        width: 45%;
       }
     }
     .statue {
