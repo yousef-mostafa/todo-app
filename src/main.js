@@ -4,8 +4,10 @@ import router from "./router";
 import store from "./store";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./scss/style-ltr.scss";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import VCalendar from "v-calendar";
 
+Vue.use(VCalendar, {});
 Vue.config.productionTip = false;
 
 new Vue({
