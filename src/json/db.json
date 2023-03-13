@@ -2,62 +2,62 @@
   "tasks": [
     {
       "title": "buy a car",
-      "date": "18 Nov",
-      "statue": "to-do",
+      "date": "2023-03-01",
+      "statue": "done",
       "id": 1
     },
     {
       "title": "buy a mobile",
-      "date": "16 Nov",
+      "date": "2023-03-02",
       "statue": "in-progress",
       "id": 2
     },
     {
       "title": "pay internet bill",
-      "date": "10 Nov",
-      "statue": "to-do",
+      "date": "2023-03-03",
+      "statue": "done",
       "id": 3
     },
     {
       "title": "cooking launch",
-      "date": "18 Nov",
+      "date": "2023-03-11",
       "statue": "to-do",
       "id": 4
     },
     {
       "title": "call my mom",
-      "date": "19 Nov",
+      "date": "2023-03-19",
       "statue": "to-do",
       "id": 5
     },
     {
       "title": "arabic homework",
-      "date": "18 Nov",
+      "date": "2023-03-21",
       "statue": "in-progress",
       "id": 6
     },
     {
       "title": "get ride of my old clothes",
-      "date": "15 Nov",
+      "date": "2023-03-23",
       "statue": "done",
       "id": 7
     },
     {
       "title": "clean my room",
-      "date": "18 Nov",
+      "date": "2023-03-25",
       "statue": "in-progress",
       "id": 8
     },
     {
       "title": "take a shower",
-      "date": "28 Nov",
+      "date": "2023-03-28",
       "statue": "to-do",
       "id": 9
     },
     {
       "title": "new task ",
-      "date": "3 Mar",
-      "statue": "to-do",
+      "date": "2023-03-31",
+      "statue": "done",
       "id": 10
     }
   ]

@@ -6,18 +6,18 @@
       @assignFlag="flagValue"
       :style="this.togglePopUp"
     ></popUp>
-    <!-- <v-date-picker
+    <v-date-picker
       @dayclick="onDayClick"
       v-model="day"
       :id="wantedID"
       style="position: absolute; z-index: 1000"
       :style="calenderPos + toggleCalender"
-    ></v-date-picker> -->
+    ></v-date-picker>
     <header>
       <div class="container">
         <div class="row">
           <div class="col-5"><p class="mx-5">Title</p></div>
-          <div class="col-3 col-md-2 text-center"><p>Ending Date</p></div>
+          <div class="col-3 col-md-2 text-center"><p>End Date</p></div>
           <div class="col-4 text-center"><p>Status</p></div>
           <div class="col-1 d-none d-md-block text-center">
             <p @click="addTask()">+</p>
@@ -63,20 +63,14 @@
                 <span
                   class="date__text"
                   v-text="task.date"
-                  @click="v - date - picker"
+                  @click="
+                    setCalenderPos($event);
+                    setCalenderDate(task.date);
+                    setWantedID(task.id);
+                    toggleCalender = toggleProb(toggleCalender);
+                  "
                 >
                 </span>
-                <v-date-picker
-                  @dayclick="onDayClick"
-                  v-model="day"
-                  :id="wantedID"
-                  style="
-                    position: absolute;
-                    z-index: 1000;
-                    inset: 0;
-                    display: none;
-                  "
-                ></v-date-picker>
               </div>
             </div>
             <div class="col-4">
@@ -99,12 +93,12 @@
                 <i
                   class="bi bi-trash-fill"
                   @click="
+                    setWantedID(task.id);
                     sendMsg(
                       `Do you want to delete this task?!
                       title : ${task.title}`
                     );
                     togglePopUp = toggleProb(togglePopUp);
-                    setWantedID(task.id);
                   "
                 ></i>
               </div>
@@ -132,7 +126,6 @@ export default {
       togglePopUp: "display:none",
       toggleCalender: "display: none",
       calenderPos: "",
-      currentDateBox: false,
       day: new Date(),
     };
   },
@@ -143,15 +136,10 @@ export default {
   mounted() {
     fetch(this.url)
       .then((res) => res.json())
-      .then((data) => (this.tasks = data));
+      .then((data) => (this.tasks = data.reverse()));
   },
   methods: {
-    onDayClick(selectedDay) {
-      this.day = selectedDay;
-      console.log(selectedDay);
-    },
     changeDB: async function (task) {
-      console.log("changeDB");
       await fetch(`${this.url}/${task.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -213,30 +201,32 @@ export default {
       }
       this.togglePopUp = this.toggleProb(this.togglePopUp);
     },
-    toggleProb: function (prop) {
-      return prop == "display:block" ? "display:none" : "display:block";
+    toggleProb: function (prob) {
+      return prob == "display:block" ? "display:none" : "display:block";
     },
-    handleCalender: function (e) {
-      // if this date box the same hide calender if else change calender position
-      if (this.currentDateBox) {
-        if (this.currentDateBox == e.target) {
-          this.toggleCalender = this.toggleProb(this.toggleCalender);
-        } else {
-          this.setCalenderPos(e);
-          this.currentDateBox = e.target;
-        }
-      } else {
-        this.setCalenderPos(e);
-        this.toggleCalender = this.toggleProb(this.toggleCalender);
-        this.currentDateBox = e.target;
-      }
+    onDayClick(selectedDay) {
+      this.day = selectedDay;
+      this.changeDate(this.day.id);
+    },
+    setCalenderDate: function (dateID) {
+      this.day = new Date(dateID);
+    },
+    changeDate: function (date) {
+      let wantedIndex = this.findElementIndex();
+      this.tasks[wantedIndex].date = date;
+      this.changeDB(this.tasks[wantedIndex]);
+    },
+    findElementIndex: function () {
+      let wantedIndex = this.tasks.findIndex(
+        (task) => task.id === this.wantedID
+      );
+      return wantedIndex;
     },
     setCalenderPos: function (e) {
       let target = e.target;
       this.calenderPos = `
       top:${target.offsetTop + target.offsetHeight}px;
-      left:${12 + target.offsetLeft - target.parentElement.offsetWidth / 2}px;`;
-      console.log(e);
+      left:${target.offsetLeft - target.offsetWidth}px;`;
     },
   },
 };
@@ -324,8 +314,6 @@ header {
         padding: 4px 8px;
         font-weight: 600;
         border-radius: 6px;
-        display: inline-block;
-        width: 45%;
       }
     }
     .statue {
