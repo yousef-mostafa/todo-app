@@ -20,7 +20,11 @@
           <div class="col-3 col-md-2 text-center"><p>End Date</p></div>
           <div class="col-4 text-center"><p>Status</p></div>
           <div class="col-1 d-none d-md-block text-center">
-            <p @click="addTask()">+</p>
+            <p>
+              <span @click.prevent="addTaskToRender()" style="cursor: pointer"
+                >+</span
+              >
+            </p>
           </div>
         </div>
       </div>
@@ -140,6 +144,7 @@ export default {
   },
   methods: {
     changeDB: async function (task) {
+      console.log("changeDB", task);
       await fetch(`${this.url}/${task.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -166,7 +171,7 @@ export default {
       }
       return statue;
     },
-    addTask: async function (newTask) {
+    addTaskDB: async function (newTask) {
       await fetch(this.url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -175,8 +180,18 @@ export default {
           date: newTask.date,
           statue: newTask.statue,
         }),
-      });
-      this.tasks.unshift(newTask);
+      })
+        .then((response) => response.json())
+        .then((data) => this.tasks.unshift(data));
+    },
+    addTaskToRender() {
+      let date = new Date();
+      let newTask = {
+        title: "new task",
+        date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
+        statue: "to-do",
+      };
+      this.addTaskDB(newTask);
     },
     toggleReadonly: function (inputFelid, editMood) {
       editMood
