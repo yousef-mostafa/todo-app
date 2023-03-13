@@ -123,7 +123,7 @@ export default {
   name: "ListView",
   data: function () {
     return {
-      url: "http://localhost:3000/tasks",
+      url: this.$store.state.APILink,
       tasks: [],
       Msg: "",
       wantedID: Number,
@@ -137,10 +137,11 @@ export default {
     popUp,
   },
 
+  created() {
+    this.$store.dispatch("getAllData");
+  },
   mounted() {
-    fetch(this.url)
-      .then((res) => res.json())
-      .then((data) => (this.tasks = data.reverse()));
+    console.log(this.$store.state.tasks);
   },
   methods: {
     changeDB: async function (task) {
@@ -182,7 +183,7 @@ export default {
         }),
       })
         .then((response) => response.json())
-        .then((data) => this.tasks.unshift(data));
+        .then((data) => this.$store.commit("appendInFront", data));
     },
     addTaskToRender() {
       let date = new Date();
