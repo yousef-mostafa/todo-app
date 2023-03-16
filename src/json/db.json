@@ -53,18 +53,6 @@
       "date": "2023-03-28",
       "statue": "done",
       "id": 9
-    },
-    {
-      "title": "new task",
-      "date": "2023-3-13",
-      "statue": "to-do",
-      "id": 10
-    },
-    {
-      "title": "new task",
-      "date": "2023-3-13",
-      "statue": "to-do",
-      "id": 11
     }
   ]
 }

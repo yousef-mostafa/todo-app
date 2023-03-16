@@ -3,7 +3,7 @@
     <popUp
       :popupMsg="Msg"
       :id="wantedID"
-      @assignFlag="flagValue"
+      @assignFlag="popupFlag"
       :style="this.togglePopUp"
     ></popUp>
     <v-date-picker
@@ -21,7 +21,7 @@
           <div class="col-4 text-center"><p>Status</p></div>
           <div class="col-1 d-none d-md-block text-center">
             <p>
-              <span @click.prevent="addTaskToRender()" style="cursor: pointer"
+              <span @click.prevent="addTaskToScreen()" style="cursor: pointer"
                 >+</span
               >
             </p>
@@ -123,8 +123,7 @@ export default {
   name: "ListView",
   data: function () {
     return {
-      url: this.$store.state.APILink,
-      tasks: [],
+      url: this.$store.state.url,
       Msg: "",
       wantedID: Number,
       togglePopUp: "display:none",
@@ -136,25 +135,16 @@ export default {
   components: {
     popUp,
   },
-
-  created() {
-    this.$store.dispatch("getAllData");
-  },
-  mounted() {
-    console.log(this.$store.state.tasks);
+  computed: {
+    tasks: {
+      get() {
+        return this.$store.getters.getTasks;
+      },
+    },
   },
   methods: {
-    changeDB: async function (task) {
-      console.log("changeDB", task);
-      await fetch(`${this.url}/${task.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: task.title,
-          date: task.date,
-          statue: task.statue,
-        }),
-      }).then((res) => res.json());
+    changeDB: function (task) {
+      this.$store.dispatch("changeDB", task);
     },
     changeStatue: function (statue) {
       switch (statue) {
@@ -172,20 +162,10 @@ export default {
       }
       return statue;
     },
-    addTaskDB: async function (newTask) {
-      await fetch(this.url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: newTask.title,
-          date: newTask.date,
-          statue: newTask.statue,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => this.$store.commit("appendInFront", data));
+    addTaskDB: function (newTask) {
+      this.$store.dispatch("addTaskDB", newTask);
     },
-    addTaskToRender() {
+    addTaskToScreen() {
       let date = new Date();
       let newTask = {
         title: "new task",
@@ -206,12 +186,9 @@ export default {
       this.wantedID = id;
     },
     deleteTask: function (id) {
-      fetch(`${this.url}/${id}`, {
-        method: "DELETE",
-      });
-      this.tasks = this.tasks.filter((task) => task.id != id);
+      this.$store.dispatch("deleteTaskDB", id);
     },
-    flagValue: function (flag, id) {
+    popupFlag: function (flag, id) {
       if (flag) {
         this.deleteTask(id);
       }
@@ -229,8 +206,7 @@ export default {
     },
     changeDate: function (date) {
       let wantedIndex = this.findElementIndex();
-      this.tasks[wantedIndex].date = date;
-      this.changeDB(this.tasks[wantedIndex]);
+      this.$store.dispatch("changeDate", { wantedIndex, date });
     },
     findElementIndex: function () {
       let wantedIndex = this.tasks.findIndex(

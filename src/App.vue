@@ -13,5 +13,8 @@ export default {
   components: {
     navbar,
   },
+  created() {
+    this.$store.dispatch("getAllData");
+  },
 };
 </script>
