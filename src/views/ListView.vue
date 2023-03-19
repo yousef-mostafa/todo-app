@@ -13,22 +13,7 @@
       style="position: absolute; z-index: 1000"
       :style="calenderPos + toggleCalender"
     ></v-date-picker>
-    <header>
-      <div class="container">
-        <div class="row">
-          <div class="col-5"><p class="mx-5">Title</p></div>
-          <div class="col-3 col-md-2 text-center"><p>End Date</p></div>
-          <div class="col-4 text-center"><p>Status</p></div>
-          <div class="col-1 d-none d-md-block text-center">
-            <p>
-              <span @click.prevent="addTaskToScreen()" style="cursor: pointer"
-                >+</span
-              >
-            </p>
-          </div>
-        </div>
-      </div>
-    </header>
+    <headerList @newTask="addTaskToScreen"></headerList>
     <div class="tasks">
       <div class="container" v-if="tasks.length">
         <div
@@ -119,6 +104,7 @@
 
 <script>
 import popUp from "@/components/PopUp.vue";
+import headerList from "@/components/HeaderList.vue";
 export default {
   name: "ListView",
   data: function () {
@@ -134,6 +120,7 @@ export default {
   },
   components: {
     popUp,
+    headerList,
   },
   computed: {
     tasks: {
@@ -162,17 +149,8 @@ export default {
       }
       return statue;
     },
-    addTaskDB: function (newTask) {
+    addTask(newTask) {
       this.$store.dispatch("addTaskDB", newTask);
-    },
-    addTaskToScreen() {
-      let date = new Date();
-      let newTask = {
-        title: "new task",
-        date: `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`,
-        statue: "to-do",
-      };
-      this.addTaskDB(newTask);
     },
     toggleReadonly: function (inputFelid, editMood) {
       editMood
