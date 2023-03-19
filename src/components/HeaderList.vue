@@ -8,8 +8,8 @@
         <div class="col-1 d-none d-md-block text-center">
           <p>
             <span @click.prevent="createNewTask()" style="cursor: pointer"
-              >+</span
-            >
+              ><i class="bi bi-plus"></i
+            ></span>
           </p>
         </div>
       </div>

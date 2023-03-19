@@ -13,7 +13,7 @@
       style="position: absolute; z-index: 1000"
       :style="calenderPos + toggleCalender"
     ></v-date-picker>
-    <headerList @newTask="addTaskToScreen"></headerList>
+    <headerList @newTask="addTask"></headerList>
     <div class="tasks">
       <div class="container" v-if="tasks.length">
         <div
