@@ -1,0 +1,17 @@
+$green-color: #1cc96d;
+$gray-color: #d4d4d4;
+$yellow-color: #e59b1e;
+$blue-color: #55bdf6;
+
+.bg-green {
+  background-color: $green-color;
+}
+.bg-yellow {
+  background-color: $yellow-color;
+}
+.bg-blue {
+  background-color: $blue-color;
+}
+p {
+  margin: 0 !important;
+}
